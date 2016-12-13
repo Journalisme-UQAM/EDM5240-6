@@ -1,0 +1,78 @@
+#coding: utf-8
+
+#j'importe les modules de bases 
+import csv
+from bs4 import BeautifulSoup
+import requests
+import time
+import datetime
+
+#tWEEPY EST UNE BIBLIOTHÈQUE POUR ACCÉDER À L'API DE TWITTER UN PEU COMME BELLE SOUPE
+import tweepy
+import logging
+
+# Je fais une liste qui va inclure tous les types de vidéos de la chaîne de Trump
+# Je l'appelle whiteangryman en l'honneur de Trump
+
+whiteangryman = []
+
+# J'ai beaucoup de classe, alors je me présente
+entetes = {
+    "User-Agent":"Mélina Soucy - Pour faire un robot twitter qui tweet les vidéos de Trump",
+    "From":"melinasoucy0695@gmail.com"
+
+#Se connecter à un compte Twitter créé pour le projet. Placer les keys et les tokens pour accéder à Twitter
+auth = tweepy.OAuthHandler( eGSR76WazdMWmp5QE0yKFG2he,  tZVOyHzW5NxfRAcrvypDXtsOEpWEPyH8myyH2noYylDWAXyXXm)
+auth.set_access_token(807715807832801285-yEC4kOOFs7cyanAR3HUgU8jaRHGcDiy,  aYyZGPTw1zsAeotqCAb8q3tRUKb2YXVMm72TykNQYHNI0)
+
+	api = tweepy.API(auth)
+#affiche le timeline de Twitter
+public_tweets = api.home_timeline()
+for tweet in public_tweets:
+    print tweet.text
+
+user = api.get_user('PumpkinPrimeMinister')
+   
+#Voici l'URL de la chaîne youtube des speechs et des rallies de Donald Trump: https://www.youtube.com/channel/UCoswYMTz68KlHKn3oEzTm4A, mais chaque vidéo a un début paril et une fin différente. Je crois que l'adresse de sa chaîne importe peu. Je crois.
+url1="https://www.youtube.com/channel/UCoswYMTz68KlHKn3oEzTm4A"
+#le début de l'URL des vidéos est toujours pareil et la fin aussi (il y a un range après le = de lettres et de chiffres entre 1 et 11)
+url2="https://www.youtube.com/"
+url3="watch?v= [0,11]
+
+#IL n'est pas nécessaire de faire une liste de codes, car chaque vidéo Youtube a son propre code de 11 caractères qui la différencie de l'autre.
+#Je vais donc tenter de faire une boucle avec mes 3 urls
+
+for url1,url2 in url3.items():
+	
+	url = "{}{}{}".format(url2, url3)
+	print("L'URL pour {} est {} de {}".format(url2,url3,url))
+	
+	# Je me connecte à l'url que j'ai créé
+	x = requests.get(url,headers=entetes,verify=False)
+	
+	# Je dis à  BeautifulSoup de mettre le code HTML dans la variable «page»
+	page = BeautifulSoup(x.text,"html.parser")
+	
+	#Je vais chercher la vidéo dans la page
+	# J,essaie d'examiner le code html de l'url1 pour trouver comment faire: je crois avoir trouver la page des vidéos donc ça devrat fonctionner
+	video = page.find("div",href="channel/UCoswYMTz68KlHKn3oEzTm4A/videos").find("dd",class_="yt-uix-button  spf-link  yt-uix-sessionlink yt-uix-button-epic-nav-item yt-uix-button-size-default" data-sessionlink="ei=B6BMWJT9FYWCugK8nYX4BQ&amp;ved=CFUQwy0YASITCNSc4abz6tACFQWBTgodvE4BXyibHA").findNext("dd",class_="yt-uix-button-content">Vidéos</span></a>").text.strip()[:-2]
+	# La commande .strip enlève les espaces de trop qu'il peut y avoir au début et à  la fin d'une chaîne de caractères explique J-H
+        
+    video = float(str.replace("video"))
+        #J'ai essayé de trouver dans la page html le code qui me donnerait accès à chaque vidéo
+        video1=page.find("dd", class_="yt-uix-button  shelves-play play-all-icon-btn yt-uix-sessionlink yt-uix-button-default yt-uix-button-size-small yt-uix-button-has-icon no-icon-markup" data-sessionlink="ei=B6BMWJT9FYWCugK8nYX4BQ"><span class="yt-uix-button-content").text.strip()[:-2]
+
+#variable qui indique la date et l'heure
+now = datetime.datetime.now()
+
+jour = now.day
+mois = time.strftime("%b")
+annee = now.year
+heure = time.strftime("%Hh%M")
+
+#print("Nous sommes le {0} {1} {2}".format(jour,mois,annee))
+
+
+# Le texte de mon tweet
+tweet = "La vidéo (video).format publié le (jour, mois annee, heure)"
+print(tweet)
